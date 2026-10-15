@@ -305,20 +305,24 @@ PlasmoidItem {
         backgroundHints: PlasmaCore.Dialog.NoBackground
         hideOnWindowDeactivate: true
         onVisibleChanged: if (!visible) { root.drooped = false; notch.progress = 0 }
+        onXChanged: notch.inset = Math.max(0, root.compactItem.mapToGlobal(0, 0).x - x)
 
         mainItem: Item {
             id: notch
             property real progress: 0
+            property real inset: 0
             readonly property real bodyWidth: Math.max(root.compactWidth, Kirigami.Units.gridUnit * 26) + Kirigami.Units.gridUnit
             readonly property real fullHeight: content.implicitHeight + Kirigami.Units.gridUnit * 1.6
             readonly property real shownHeight: Math.max(0, fullHeight * progress)
-            width: bodyWidth + root.ear * 2
+            width: inset + bodyWidth + root.ear
             height: fullHeight * 1.1
             focus: true
             Keys.onEscapePressed: root.drooped = false
 
             Shape {
-                anchors.fill: parent
+                x: notch.inset
+                width: parent.width - notch.inset
+                height: parent.height
                 preferredRendererType: Shape.CurveRenderer
                 ShapePath {
                     id: sp
@@ -329,19 +333,18 @@ PlasmoidItem {
                     strokeWidth: -1
                     fillColor: root.notchColor
                     startX: 0; startY: 0
-                    PathQuad { controlX: sp.e; controlY: 0; x: sp.e; y: sp.e }
-                    PathLine { x: sp.e; y: sp.h - sp.r }
-                    PathQuad { controlX: sp.e; controlY: sp.h; x: sp.e + sp.r; y: sp.h }
-                    PathLine { x: sp.e + sp.w - sp.r; y: sp.h }
-                    PathQuad { controlX: sp.e + sp.w; controlY: sp.h; x: sp.e + sp.w; y: sp.h - sp.r }
-                    PathLine { x: sp.e + sp.w; y: sp.e }
-                    PathQuad { controlX: sp.e + sp.w; controlY: 0; x: sp.e * 2 + sp.w; y: 0 }
+                    PathLine { x: 0; y: sp.h - sp.r }
+                    PathQuad { controlX: 0; controlY: sp.h; x: sp.r; y: sp.h }
+                    PathLine { x: sp.w - sp.r; y: sp.h }
+                    PathQuad { controlX: sp.w; controlY: sp.h; x: sp.w; y: sp.h - sp.r }
+                    PathLine { x: sp.w; y: sp.e }
+                    PathQuad { controlX: sp.w; controlY: 0; x: sp.w + sp.e; y: 0 }
                     PathLine { x: 0; y: 0 }
                 }
             }
 
             Item {
-                x: root.ear
+                x: notch.inset
                 width: notch.bodyWidth
                 height: notch.shownHeight
                 clip: true
