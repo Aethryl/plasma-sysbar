@@ -305,7 +305,7 @@ PlasmoidItem {
         backgroundHints: PlasmaCore.Dialog.NoBackground
         hideOnWindowDeactivate: true
         onVisibleChanged: if (!visible) { root.drooped = false; notch.progress = 0 }
-        onXChanged: notch.inset = Math.max(0, root.compactItem.mapToGlobal(0, 0).x - x)
+        onXChanged: notch.inset = Math.max(0, root.compactItem.mapToGlobal(0, 0).x - x - 2)
 
         mainItem: Item {
             id: notch
