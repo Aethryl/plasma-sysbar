@@ -248,7 +248,7 @@ PlasmoidItem {
             anchors.centerIn: parent
             spacing: Kirigami.Units.largeSpacing
 
-            Meter { label: "cpu"; pct: root.cpuUsage; accent: root.accent }
+            Meter { label: "cpu"; pct: root.cpuUsage; accent: root.accent; Layout.leftMargin: Kirigami.Units.smallSpacing }
             PlasmaComponents.Label {
                 visible: cpuTemp.value > 0
                 text: Math.round(cpuTemp.value) + "°"
@@ -270,6 +270,14 @@ PlasmoidItem {
 
     onDroopedChanged: {
         if (drooped) {
+            let bar = compactItem
+            while (bar.parent && bar.parent.parent && bar.parent.parent.parent)
+                bar = bar.parent
+            const corner = bar.mapToGlobal(0, bar.height)
+            droop.x = Math.floor(corner.x)
+            droop.y = Math.floor(corner.y) - Kirigami.Units.cornerRadius
+            notch.edgeX = corner.x - droop.x
+            notch.edgeY = corner.y - droop.y
             droop.visible = true
             droop.requestActivate()
             reveal.to = 1
@@ -292,55 +300,71 @@ PlasmoidItem {
 
     PlasmaCore.Dialog {
         id: droop
-        visualParent: root.compactItem
         location: PlasmaCore.Types.TopEdge
         type: PlasmaCore.Dialog.PopupMenu
         flags: Qt.WindowStaysOnTopHint
         backgroundHints: PlasmaCore.Dialog.NoBackground
         hideOnWindowDeactivate: true
         onVisibleChanged: if (!visible) { root.drooped = false; notch.progress = 0 }
-        onXChanged: notch.inset = Math.max(0, root.compactItem.mapToGlobal(0, 0).x - x - 2)
 
         mainItem: Item {
             id: notch
             property real progress: 0
-            property real inset: 0
+            property real edgeX: 0
+            property real edgeY: Kirigami.Units.cornerRadius
             readonly property real bodyWidth: Math.max(root.compactWidth, Kirigami.Units.gridUnit * 26) + Kirigami.Units.gridUnit
             readonly property real fullHeight: content.implicitHeight + Kirigami.Units.gridUnit * 1.6
             readonly property real shownHeight: Math.max(0, fullHeight * progress)
-            width: inset + bodyWidth + root.ear
-            height: fullHeight * 1.1
+            width: edgeX + bodyWidth + root.ear
+            height: edgeY + fullHeight * 1.1
             focus: true
             Keys.onEscapePressed: root.drooped = false
             Kirigami.Theme.colorSet: Kirigami.Theme.Window
             Kirigami.Theme.inherit: false
 
             Shape {
-                x: notch.inset
-                width: parent.width - notch.inset
+                x: notch.edgeX
+                width: parent.width - notch.edgeX
                 height: parent.height
                 preferredRendererType: Shape.CurveRenderer
                 ShapePath {
                     id: sp
+                    readonly property real c: notch.edgeY
                     readonly property real e: root.ear
                     readonly property real w: notch.bodyWidth
-                    readonly property real h: Math.max(notch.shownHeight, e + 1)
-                    readonly property real r: Math.min(root.bottomRadius, h - e)
+                    readonly property real h: c + Math.max(notch.shownHeight, e + 1)
+                    readonly property real r: Math.min(root.bottomRadius, h - c - e)
+                    readonly property real o: 0.5
                     strokeWidth: -1
                     fillColor: Qt.tint(Kirigami.Theme.backgroundColor, Qt.alpha(Kirigami.Theme.textColor, 0.08))
                     startX: 0; startY: 0
                     PathLine { x: 0; y: sp.h - sp.r }
-                    PathQuad { controlX: 0; controlY: sp.h; x: sp.r; y: sp.h }
+                    PathArc { x: sp.r; y: sp.h; radiusX: sp.r; radiusY: sp.r; direction: PathArc.Counterclockwise }
                     PathLine { x: sp.w - sp.r; y: sp.h }
-                    PathQuad { controlX: sp.w; controlY: sp.h; x: sp.w; y: sp.h - sp.r }
-                    PathLine { x: sp.w; y: sp.e }
-                    PathQuad { controlX: sp.w; controlY: 0; x: sp.w + sp.e; y: 0 }
+                    PathArc { x: sp.w; y: sp.h - sp.r; radiusX: sp.r; radiusY: sp.r; direction: PathArc.Counterclockwise }
+                    PathLine { x: sp.w; y: sp.c + sp.e }
+                    PathArc { x: sp.w + sp.e; y: sp.c; radiusX: sp.e; radiusY: sp.e }
+                    PathLine { x: sp.w + sp.e; y: 0 }
                     PathLine { x: 0; y: 0 }
+                }
+                ShapePath {
+                    strokeWidth: 1
+                    strokeColor: Qt.tint(Kirigami.Theme.backgroundColor, Qt.alpha(Kirigami.Theme.textColor, 0.14))
+                    fillColor: "transparent"
+                    capStyle: ShapePath.FlatCap
+                    startX: sp.o; startY: 0
+                    PathLine { x: sp.o; y: sp.h - sp.r }
+                    PathArc { x: sp.r; y: sp.h - sp.o; radiusX: sp.r - sp.o; radiusY: sp.r - sp.o; direction: PathArc.Counterclockwise }
+                    PathLine { x: sp.w - sp.r; y: sp.h - sp.o }
+                    PathArc { x: sp.w - sp.o; y: sp.h - sp.r; radiusX: sp.r - sp.o; radiusY: sp.r - sp.o; direction: PathArc.Counterclockwise }
+                    PathLine { x: sp.w - sp.o; y: sp.c + sp.e }
+                    PathArc { x: sp.w + sp.e; y: sp.c - sp.o; radiusX: sp.e + sp.o; radiusY: sp.e + sp.o }
                 }
             }
 
             Item {
-                x: notch.inset
+                x: notch.edgeX
+                y: notch.edgeY
                 width: notch.bodyWidth
                 height: notch.shownHeight
                 clip: true
