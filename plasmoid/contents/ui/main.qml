@@ -251,14 +251,14 @@ PlasmoidItem {
         RowLayout {
             id: row
             anchors.centerIn: parent
-            spacing: Kirigami.Units.largeSpacing * 2
+            spacing: Kirigami.Units.largeSpacing * 1.5
 
             Meter { label: "cpu"; pct: root.cpuUsage; accent: root.accent; Layout.leftMargin: Kirigami.Units.smallSpacing }
             PlasmaComponents.Label {
                 visible: cpuTemp.value > 0
                 text: Math.round(cpuTemp.value) + "°"
                 color: root.tempColor(cpuTemp.value)
-                Layout.leftMargin: -Kirigami.Units.largeSpacing * 1.25
+                Layout.leftMargin: -Kirigami.Units.largeSpacing * 0.75
             }
             Meter { label: "ram"; pct: root.memUsage; accent: root.link }
             Meter { label: "gpu"; pct: root.gpuUsage; accent: root.ok }
