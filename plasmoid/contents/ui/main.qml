@@ -190,12 +190,6 @@ PlasmoidItem {
         }
     }
 
-    component Divider: Rectangle {
-        Layout.preferredWidth: 1
-        Layout.preferredHeight: Kirigami.Units.gridUnit * 0.8
-        color: root.dim
-    }
-
     component Card: Rectangle {
         id: card
         property string title
@@ -257,20 +251,17 @@ PlasmoidItem {
         RowLayout {
             id: row
             anchors.centerIn: parent
-            spacing: Kirigami.Units.largeSpacing
+            spacing: Kirigami.Units.largeSpacing * 2
 
             Meter { label: "cpu"; pct: root.cpuUsage; accent: root.accent; Layout.leftMargin: Kirigami.Units.smallSpacing }
             PlasmaComponents.Label {
                 visible: cpuTemp.value > 0
                 text: Math.round(cpuTemp.value) + "°"
                 color: root.tempColor(cpuTemp.value)
-                Layout.leftMargin: -Kirigami.Units.smallSpacing
+                Layout.leftMargin: -Kirigami.Units.largeSpacing * 1.25
             }
-            Divider {}
             Meter { label: "ram"; pct: root.memUsage; accent: root.link }
-            Divider {}
             Meter { label: "gpu"; pct: root.gpuUsage; accent: root.ok }
-            Divider {}
             PlasmaComponents.Label {
                 text: "↓ " + root.shortRate(down.value) + "  ↑ " + root.shortRate(up.value)
                 color: root.dim
