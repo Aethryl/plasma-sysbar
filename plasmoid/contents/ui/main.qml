@@ -25,18 +25,17 @@ PlasmoidItem {
     property var upHistory: []
     property var processes: []
 
-    readonly property color notchColor: "#262634"
     readonly property real ear: Kirigami.Units.gridUnit * 0.7
     readonly property real bottomRadius: Kirigami.Units.gridUnit * 1.1
 
-    readonly property color mauve: "#cba6f7"
-    readonly property color blue: "#89b4fa"
-    readonly property color green: "#a6e3a1"
-    readonly property color sky: "#89dceb"
-    readonly property color peach: "#fab387"
-    readonly property color yellow: "#f9e2af"
-    readonly property color red: "#f38ba8"
-    readonly property color dim: Qt.alpha(Kirigami.Theme.textColor, 0.45)
+    readonly property color accent: Kirigami.Theme.highlightColor
+    readonly property color link: Kirigami.Theme.linkColor
+    readonly property color ok: Kirigami.Theme.positiveTextColor
+    readonly property color info: Kirigami.Theme.activeTextColor
+    readonly property color extra: Kirigami.Theme.visitedTextColor
+    readonly property color warning: Kirigami.Theme.neutralTextColor
+    readonly property color critical: Kirigami.Theme.negativeTextColor
+    readonly property color dim: Kirigami.Theme.disabledTextColor
     readonly property color faint: Qt.alpha(Kirigami.Theme.textColor, 0.06)
 
     readonly property real cpuUsage: cpu.value || 0
@@ -50,7 +49,7 @@ PlasmoidItem {
     toolTipSubText: ""
 
     function tempColor(t) {
-        return t >= 85 ? red : t >= 70 ? yellow : dim
+        return t >= 85 ? critical : t >= 70 ? warning : dim
     }
 
     function bytes(value) {
@@ -254,7 +253,7 @@ PlasmoidItem {
             anchors.centerIn: parent
             spacing: Kirigami.Units.largeSpacing
 
-            Meter { label: "cpu"; pct: root.cpuUsage; accent: root.mauve }
+            Meter { label: "cpu"; pct: root.cpuUsage; accent: root.accent }
             PlasmaComponents.Label {
                 visible: cpuTemp.value > 0
                 text: Math.round(cpuTemp.value) + "°"
@@ -262,9 +261,9 @@ PlasmoidItem {
                 Layout.leftMargin: -Kirigami.Units.smallSpacing
             }
             Divider {}
-            Meter { label: "ram"; pct: root.memUsage; accent: root.blue }
+            Meter { label: "ram"; pct: root.memUsage; accent: root.link }
             Divider {}
-            Meter { label: "gpu"; pct: root.gpuUsage; accent: root.green }
+            Meter { label: "gpu"; pct: root.gpuUsage; accent: root.ok }
             Divider {}
             PlasmaComponents.Label {
                 text: "↓ " + root.shortRate(down.value) + "  ↑ " + root.shortRate(up.value)
@@ -318,6 +317,8 @@ PlasmoidItem {
             height: fullHeight * 1.1
             focus: true
             Keys.onEscapePressed: root.drooped = false
+            Kirigami.Theme.colorSet: Kirigami.Theme.Window
+            Kirigami.Theme.inherit: false
 
             Shape {
                 x: notch.inset
@@ -331,7 +332,7 @@ PlasmoidItem {
                     readonly property real h: Math.max(notch.shownHeight, e + 1)
                     readonly property real r: Math.min(root.bottomRadius, h - e)
                     strokeWidth: -1
-                    fillColor: root.notchColor
+                    fillColor: Kirigami.Theme.backgroundColor
                     startX: 0; startY: 0
                     PathLine { x: 0; y: sp.h - sp.r }
                     PathQuad { controlX: 0; controlY: sp.h; x: sp.r; y: sp.h }
@@ -364,7 +365,7 @@ PlasmoidItem {
                         Card {
                             title: "CPU"
                             value: Math.round(root.cpuUsage) + "%"
-                            accent: root.mauve
+                            accent: root.accent
                             detail: [
                                 cpuTemp.value > 0 ? Math.round(cpuTemp.value) + "°C" : "",
                                 cpuFreq.value > 0 ? (cpuFreq.value / 1000).toFixed(1) + " GHz" : "",
@@ -375,7 +376,7 @@ PlasmoidItem {
                                     anchors.fill: parent
                                     anchors.bottomMargin: Kirigami.Units.smallSpacing * 2.5
                                     values: root.cpuHistory
-                                    color: root.mauve
+                                    color: root.accent
                                     capacity: root.capacity
                                 },
                                 Row {
@@ -391,7 +392,7 @@ PlasmoidItem {
                                             width: (parent.width - (cores.count - 1) * 2) / Math.max(1, cores.count)
                                             height: parent.height
                                             radius: 1
-                                            color: Qt.alpha(root.mauve, 0.15 + 0.85 * Math.min(1, usage / 100))
+                                            color: Qt.alpha(root.accent, 0.15 + 0.85 * Math.min(1, usage / 100))
                                         }
                                     }
                                 }
@@ -401,13 +402,13 @@ PlasmoidItem {
                         Card {
                             title: "Memory"
                             value: Math.round(root.memUsage) + "%"
-                            accent: root.blue
+                            accent: root.link
                             detail: root.bytes(memUsed.value) + " / " + root.bytes(memTotal.value)
                                 + " · swap " + Math.round(swapPercent.value || 0) + "%"
                             graph: Sparkline {
                                 anchors.fill: parent
                                 values: root.memHistory
-                                color: root.blue
+                                color: root.link
                                 capacity: root.capacity
                             }
                         }
@@ -420,7 +421,7 @@ PlasmoidItem {
                         Card {
                             title: "GPU"
                             value: Math.round(root.gpuUsage) + "%"
-                            accent: root.green
+                            accent: root.ok
                             detail: [
                                 gpuTemp.value > 0 ? Math.round(gpuTemp.value) + "°C" : "",
                                 vramTotal.value > 0 ? "VRAM " + root.bytes(vramUsed.value) + " / " + root.bytes(vramTotal.value) : "",
@@ -428,7 +429,7 @@ PlasmoidItem {
                             graph: Sparkline {
                                 anchors.fill: parent
                                 values: root.gpuHistory
-                                color: root.green
+                                color: root.ok
                                 capacity: root.capacity
                             }
                         }
@@ -436,15 +437,15 @@ PlasmoidItem {
                         Card {
                             title: "Network"
                             value: "↓ " + root.rate(down.value)
-                            accent: root.sky
+                            accent: root.info
                             detail: "↑ " + root.rate(up.value) + " · disk " + root.shortRate(diskRead.value) + "B/" + root.shortRate(diskWrite.value) + "B"
                             graph: Sparkline {
                                 anchors.fill: parent
                                 values: root.downHistory
                                 secondary: root.upHistory
                                 maximum: 1024
-                                color: root.sky
-                                secondaryColor: root.peach
+                                color: root.info
+                                secondaryColor: root.extra
                                 capacity: root.capacity
                             }
                         }
@@ -500,7 +501,7 @@ PlasmoidItem {
                                 Bar {
                                     Layout.preferredWidth: Kirigami.Units.gridUnit * 3
                                     pct: modelData.cpu
-                                    fill: root.mauve
+                                    fill: root.accent
                                 }
                                 PlasmaComponents.Label {
                                     Layout.minimumWidth: Kirigami.Units.gridUnit * 2.2
