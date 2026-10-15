@@ -1,0 +1,14 @@
+{
+    "KPlugin": {
+        "Authors": [{ "Name": "Fabian" }],
+        "Category": "System Information",
+        "Description": "Compact hardware stats with a notch dropdown",
+        "Icon": "utilities-system-monitor",
+        "Id": "io.github.aethryl.sysbar",
+        "License": "MIT",
+        "Name": "Sys Bar",
+        "Version": "0.1"
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
