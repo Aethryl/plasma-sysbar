@@ -171,17 +171,16 @@ PlasmoidItem {
         spacing: Kirigami.Units.smallSpacing
         PlasmaComponents.Label {
             id: meterLabel
+            readonly property real dpr: Screen.devicePixelRatio || 1
             text: meter.label
             color: root.dim
+            transform: Translate {
+                y: -Math.round((meterMetrics.ascent - meterMetrics.xHeight / 2 - meterMetrics.height / 2) * meterLabel.dpr) / meterLabel.dpr
+            }
         }
         Bar {
-            id: meterBar
-            readonly property real dpr: Screen.devicePixelRatio || 1
             Layout.preferredWidth: Kirigami.Units.gridUnit * 1.4
             Layout.alignment: Qt.AlignVCenter
-            transform: Translate {
-                y: Math.round((meterMetrics.ascent - meterMetrics.xHeight / 2 - meterMetrics.height / 2) * meterBar.dpr) / meterBar.dpr
-            }
             pct: meter.pct
             fill: meter.accent
         }
