@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Window
 import QtQuick.Layouts
 import QtQuick.Shapes
 import org.kde.plasma.plasmoid
@@ -169,13 +170,24 @@ PlasmoidItem {
         property color accent
         spacing: Kirigami.Units.smallSpacing
         PlasmaComponents.Label {
+            id: meterLabel
             text: meter.label
             color: root.dim
         }
         Bar {
+            id: meterBar
+            readonly property real dpr: Screen.devicePixelRatio || 1
             Layout.preferredWidth: Kirigami.Units.gridUnit * 1.4
+            Layout.alignment: Qt.AlignVCenter
+            transform: Translate {
+                y: Math.round((meterMetrics.ascent - meterMetrics.xHeight / 2 - meterMetrics.height / 2) * meterBar.dpr) / meterBar.dpr
+            }
             pct: meter.pct
             fill: meter.accent
+        }
+        FontMetrics {
+            id: meterMetrics
+            font: meterLabel.font
         }
     }
 
