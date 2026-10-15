@@ -25,7 +25,7 @@ PlasmoidItem {
     property var upHistory: []
     property var processes: []
 
-    readonly property color notchColor: "#181825"
+    readonly property color notchColor: "#262634"
     readonly property real ear: Kirigami.Units.gridUnit * 0.7
     readonly property real bottomRadius: Kirigami.Units.gridUnit * 1.1
 
