@@ -32,7 +32,7 @@ PlasmoidItem {
     readonly property color link: Kirigami.Theme.linkColor
     readonly property color ok: Kirigami.Theme.positiveTextColor
     readonly property color info: Kirigami.Theme.activeTextColor
-    readonly property color extra: Kirigami.Theme.visitedTextColor
+    readonly property color extra: Kirigami.Theme.visitedLinkColor
     readonly property color warning: Kirigami.Theme.neutralTextColor
     readonly property color critical: Kirigami.Theme.negativeTextColor
     readonly property color dim: Kirigami.Theme.disabledTextColor
@@ -332,7 +332,7 @@ PlasmoidItem {
                     readonly property real h: Math.max(notch.shownHeight, e + 1)
                     readonly property real r: Math.min(root.bottomRadius, h - e)
                     strokeWidth: -1
-                    fillColor: Kirigami.Theme.backgroundColor
+                    fillColor: Qt.tint(Kirigami.Theme.backgroundColor, Qt.alpha(Kirigami.Theme.textColor, 0.08))
                     startX: 0; startY: 0
                     PathLine { x: 0; y: sp.h - sp.r }
                     PathQuad { controlX: 0; controlY: sp.h; x: sp.r; y: sp.h }
