@@ -173,14 +173,9 @@ PlasmoidItem {
             color: root.dim
         }
         Bar {
-            Layout.preferredWidth: Kirigami.Units.gridUnit * 2
+            Layout.preferredWidth: Kirigami.Units.gridUnit * 1.4
             pct: meter.pct
             fill: meter.accent
-        }
-        PlasmaComponents.Label {
-            text: Math.round(meter.pct) + "%"
-            font.features: { "tnum": 1 }
-            Layout.minimumWidth: Kirigami.Units.gridUnit * 1.6
         }
     }
 
