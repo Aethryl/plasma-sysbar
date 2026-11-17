@@ -1,6 +1,6 @@
 {
     "KPlugin": {
-        "Authors": [{ "Name": "Fabian" }],
+        "Authors": [{ "Name": "Aethryl" }],
         "Category": "System Information",
         "Description": "Compact hardware stats with a notch dropdown",
         "Icon": "utilities-system-monitor",
