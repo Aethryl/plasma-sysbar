@@ -2,7 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/panel-dark.png">
-  <img src="docs/screenshots/panel-light.png" alt="Sysbar panel meters under simulated load" width="365">
+  <img src="docs/screenshots/panel-light.png" alt="Sysbar panel meters under simulated load" width="440">
 </picture>
 
 Sysbar (`io.github.aethryl.sysbar`) puts hardware and network activity in your Plasma 6 panel. Click it to open the notch for a closer look.
@@ -15,7 +15,7 @@ Sysbar (`io.github.aethryl.sysbar`) puts hardware and network activity in your P
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/notch-dark.png">
-  <img src="docs/screenshots/notch-light.png" alt="Sysbar notch with simulated history, per-core load and top processes" width="495">
+  <img src="docs/screenshots/notch-light.png" alt="Sysbar notch with simulated history, per-core load and top processes" width="600">
 </picture>
 
 *Screenshots show simulated load.*
